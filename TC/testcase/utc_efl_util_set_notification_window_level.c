@@ -11,7 +11,7 @@
  * distributed under the License is distributed on an AS IS BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 
 #include <tet_api.h>
@@ -38,9 +38,11 @@ static void utc_efl_util_get_notification_window_level_negative_2(void);
 
 static void utc_efl_util_set_notification_window_level_positive_1(void);
 static void utc_efl_util_set_notification_window_level_positive_2(void);
+static void utc_efl_util_set_notification_window_level_positive_3(void);
 
 static void utc_efl_util_get_notification_window_level_positive_1(void);
 static void utc_efl_util_get_notification_window_level_positive_2(void);
+static void utc_efl_util_get_notification_window_level_positive_3(void);
 
 
 struct tet_testlist tet_testlist[] = {
@@ -51,8 +53,10 @@ struct tet_testlist tet_testlist[] = {
 	{ utc_efl_util_get_notification_window_level_negative_2, 1 },
 	{ utc_efl_util_set_notification_window_level_positive_1, 1 },
 	{ utc_efl_util_set_notification_window_level_positive_2, 1 },
+	{ utc_efl_util_set_notification_window_level_positive_3, 1 },
 	{ utc_efl_util_get_notification_window_level_positive_1, 1 },
 	{ utc_efl_util_get_notification_window_level_positive_2, 1 },
+	{ utc_efl_util_get_notification_window_level_positive_3, 1 },
 	{ NULL, 0 },
 };
 
@@ -88,9 +92,9 @@ static Evas_Object* create_normal_win(const char *name)
 		elm_win_borderless_set(eo, EINA_TRUE);
 		evas_object_smart_callback_add(eo, "delete,request",
 				win_del, NULL);
-		elm_win_indicator_state_set(eo, EINA_TRUE);
+		elm_win_indicator_mode_set(eo, ELM_WIN_INDICATOR_SHOW);
 	}
-	
+
 	return eo;
 }
 
@@ -106,9 +110,9 @@ static Evas_Object* create_notification_win(const char *name)
 		elm_win_borderless_set(eo, EINA_TRUE);
 		evas_object_smart_callback_add(eo, "delete,request",
 				win_del, NULL);
-		elm_win_indicator_state_set(eo, EINA_TRUE);
+		elm_win_indicator_mode_set(eo, ELM_WIN_INDICATOR_SHOW);
 	}
-	
+
 	return eo;
 }
 
@@ -294,6 +298,35 @@ static void utc_efl_util_set_notification_window_level_positive_2(void)
 /**
  * @brief Positive test case of efl_util_set_notification_window_level()
  */
+static void utc_efl_util_set_notification_window_level_positive_3(void)
+{
+	Evas_Object *win;
+	int ret1, ret2, ret3;
+
+	win = create_notification_win("Notification Type Window");
+	if (!win)
+	{
+		dts_fail(API_SET_NOTIFICATION_WINDOW_LEVEL, "failed to create window");
+	}
+
+	ret1 = efl_util_set_notification_window_level(win, EFL_UTIL_NOTIFICATION_LEVEL_1);
+	ret2 = efl_util_set_notification_window_level(win, EFL_UTIL_NOTIFICATION_LEVEL_2);
+	ret3 = efl_util_set_notification_window_level(win, EFL_UTIL_NOTIFICATION_LEVEL_3);
+
+	if (ret3 == EFL_UTIL_ERROR_NONE)
+	{
+		dts_pass(API_SET_NOTIFICATION_WINDOW_LEVEL, "passed");
+	}
+	else
+	{
+		dts_fail(API_SET_NOTIFICATION_WINDOW_LEVEL, "failed");
+	}
+}
+
+
+/**
+ * @brief Positive test case of efl_util_set_notification_window_level()
+ */
 static void utc_efl_util_get_notification_window_level_positive_1(void)
 {
 	Evas_Object *win;
@@ -351,6 +384,44 @@ static void utc_efl_util_get_notification_window_level_positive_2(void)
 	if (ret == EFL_UTIL_ERROR_NONE)
 	{
 		if (level == EFL_UTIL_NOTIFICATION_LEVEL_2)
+		{
+			dts_pass(API_GET_NOTIFICATION_WINDOW_LEVEL, "passed");
+		}
+		else
+		{
+			dts_fail(API_GET_NOTIFICATION_WINDOW_LEVEL, "failed - level is wrong");
+		}
+	}
+	else
+	{
+		dts_fail(API_GET_NOTIFICATION_WINDOW_LEVEL, "failed - return value is wrong");
+	}
+}
+
+
+/**
+ * @brief Positive test case of efl_util_set_notification_window_level()
+ */
+static void utc_efl_util_get_notification_window_level_positive_3(void)
+{
+	Evas_Object *win;
+	int ret;
+	int level;
+
+	win = create_notification_win("Notification Type Window");
+	if (!win)
+	{
+		dts_fail(API_GET_NOTIFICATION_WINDOW_LEVEL, "failed to create window");
+	}
+	efl_util_set_notification_window_level(win, EFL_UTIL_NOTIFICATION_LEVEL_1);
+	efl_util_set_notification_window_level(win, EFL_UTIL_NOTIFICATION_LEVEL_3);
+
+	level = -1;
+	ret = efl_util_get_notification_window_level(win,  &level);
+
+	if (ret == EFL_UTIL_ERROR_NONE)
+	{
+		if (level == EFL_UTIL_NOTIFICATION_LEVEL_3)
 		{
 			dts_pass(API_GET_NOTIFICATION_WINDOW_LEVEL, "passed");
 		}

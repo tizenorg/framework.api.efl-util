@@ -1,6 +1,6 @@
 Name:       capi-ui-efl-util
 Summary:    An EFL utility library in SLP C API
-Version:    0.1.0
+Version:    0.1.5
 Release:    1
 Group:      TO_BE/FILLED_IN
 License:    TO BE FILLED IN
@@ -9,6 +9,7 @@ BuildRequires:  cmake
 BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(utilX)
+BuildRequires:  pkgconfig(ecore-x)
 BuildRequires:  pkgconfig(elementary)
 BuildRequires:  pkgconfig(capi-base-common)
 
