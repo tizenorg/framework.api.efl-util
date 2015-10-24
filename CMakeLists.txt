@@ -10,7 +10,13 @@ SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(INC_DIR include)
 INCLUDE_DIRECTORIES(${INC_DIR})
 
-SET(dependents "dlog utilX elementary capi-base-common")
+OPTION(USE_DRI2 "Use dri2 in screenshot" OFF)
+
+IF (USE_DRI2)
+   ADD_DEFINITIONS(-DUSE_DRI2)
+ENDIF (USE_DRI2)
+
+SET(dependents "dlog utilX elementary capi-base-common x11 xv libdri2 xext xdamage libdrm libtbm xtst x11-xcb xcb xcb-dri3")
 
 INCLUDE(FindPkgConfig)
 pkg_check_modules(${fw_name} REQUIRED ${dependents})
@@ -66,10 +72,10 @@ IF(UNIX)
 
 ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
 ADD_CUSTOM_COMMAND(
-        DEPENDS clean 
+        DEPENDS clean
         COMMENT "distribution clean"
         COMMAND find
-        ARGS    . 
+        ARGS    .
         -not -name config.cmake -and \(
         -name tester.c -or
         -name Testing -or
